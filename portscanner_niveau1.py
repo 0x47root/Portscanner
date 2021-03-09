@@ -39,9 +39,24 @@ def TCP_SYN_scan(target, first_port, last_port):
         else:
             if int(ans[TCP].flags) == 18: # 18 means SYN (2) + ACK (16)
                 print(f"Port {port} is open!")
+            #elif (int(ans.getlayer(ICMP).type) == 3 and int(ans.getlayer(ICMP).code) in [1, 2, 3, 9, 10, 13]):
+                #print(f"Port {port} is filtered!")
             else:
                 print(f"Port {port} is closed")
 
-#TCP_connect_scan('192.168.11.130', 1330, 1400)
-#UDP_scan("192.168.178.60", 52, 55)
-TCP_SYN_scan("192.168.178.1", 400, 445)
+def XMAS_scan(target, first_port, last_port):
+    last_port += 1
+    for port in range(first_port, last_port):
+        ans = sr1(IP(dst=target)/TCP(dport=port, flags='FPU'), timeout=2, verbose=0) # PSH, FIN and URG
+        if ans == None:
+            print(f"Port {port} is open!")
+        elif ans.haslayer(TCP):
+            if int(ans[TCP].flags) == 20: # 20 means RST (4) + ACK (16)
+                print(f"Port {port} is closed")
+            else:
+                print(f"Port {port} is filtered")
+
+#TCP_connect_scan('45.33.32.156', 514, 514)
+#UDP_scan('45.33.32.156', 120, 125)
+#TCP_SYN_scan('45.33.32.156', 514, 514)
+XMAS_scan('45.33.32.156', 20, 80)
