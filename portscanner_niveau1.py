@@ -10,7 +10,7 @@ logging.getLogger("scapy.runtime").setLevel(logging.ERROR)
 # create a nice banner for script
 print(pyfiglet.figlet_format("PORT SCANNER"))
 print(70 * "-")
-print("By 0x47root | Drink all the booze, scan all machines! ;p")
+print("By 0x47root")
 print(70 * "-")
 
 # ask user for input
