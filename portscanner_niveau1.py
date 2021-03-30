@@ -19,9 +19,12 @@ target = input("Please specify the IP-address to scan: ")
 first_port = int(input("Please specify the first port in port range: "))
 last_port = int(input("Please specify the last port in port range: ")) + 1
 
+# input sanitization
+
 # creating dictionary to store results
 portscan = {}
 portscan['host'] = target
+portscan['scan_type'] = scan_type
 portscan['open_ports'] = []
 portscan['closed_ports'] = []
 portscan['filtered_ports'] = []
