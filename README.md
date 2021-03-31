@@ -16,3 +16,6 @@ python3 portscanner_level1.py
 - Scan range of ports
 - Save scan results to XML or JSON
 - Automatically save results to SQLite database
+
+## Requirements
+- SQLite3 installed
