@@ -3,7 +3,7 @@ This portscanner is created by **0x47root**.
 
 ## Usage:
 ```bash
-python3 portscanner_level1.py
+python3 main.py
 ```
 
 ## Possible scan types
@@ -14,7 +14,7 @@ python3 portscanner_level1.py
 
 ## Additional functionalities
 - Scan range of ports
-- Save scan results to XML or JSON
+- Save scan results to XML or JSON file
 - Automatically save results to SQLite database
 
 ## Requirements
