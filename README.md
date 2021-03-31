@@ -3,7 +3,7 @@ This portscanner is created by **0x47root**.
 
 ## Usage:
 ```bash
-python3 portscanner_niveau1.py
+python3 portscanner_level1.py
 ```
 
 ## Possible scan types
