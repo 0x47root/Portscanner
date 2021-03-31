@@ -1,2 +1,2 @@
-# Eindopdracht-Module-4
-Dit is de repo voor de Python opdracht van Module 4.
+# Portscanner
+This portscanner is created by **0x47root**.
