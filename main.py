@@ -35,24 +35,34 @@ def ask_host():
         try:
             ipaddress.IPv4Address(target)
             break
-        except:
-            target = input("Wrong input, please specify a correct IPv4 address: ")
+        except ipaddress.AddressValueError:
+            target = input("AddressValueError: Please specify a correct IPv4 address: ")
     return target
 
 # Define a function to ask the user the first port to scan in range while taking care of input sanitization.
 def ask_first_port():
-    first_port = int(input("Please specify the first port in port range: "))
-    while first_port not in range(1, 65535):
-        first_port = int(input("Wrong input, please specify a single port between 1 and 65535: "))
+    while True:
+        try:
+            first_port = int(input("Please specify the first port in port range: "))
+            while first_port not in range(1, 65536):
+                first_port = int(input("Wrong number, please specify a single port between 1 and 65535: "))
+            break
+        except ValueError:
+            print("ValueError: It has to be an integer.")
     return first_port
 
 # Define a function to ask the user the last port to scan in range while taking care of input sanitization.
 def ask_last_port(first_port):
-    last_port = int(input("Please specify the last port in port range: ")) + 1
-    while last_port not in range(1, 65535):
-        last_port = int(input("Wrong input, please specify a single port between 1 and 65535: ")) + 1
-    while last_port <= first_port:
-        last_port = int(input("Please enter a number that is equal or higher than the first: ")) + 1
+    while True:
+        try:
+            last_port = int(input("Please specify the last port in port range: ")) + 1
+            while first_port not in range(1, 65536):
+                last_port = int(input("Wrong input, please specify a single port between 1 and 65535: ")) + 1
+            while last_port <= first_port:
+                last_port = int(input("Please enter a number that is equal or higher than the first: ")) + 1
+            break
+        except ValueError:
+            print("ValueError: It has to be an integer.")
     return last_port
 
 # Define a function to ask the user how to output the results while taking care of input sanitization.

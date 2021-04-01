@@ -1,5 +1,5 @@
 """
-This file creates a SQLite database file, if not created yet,
+This file creates a SQLite database file (if not created yet)
 and writes the scan results to the database,
 """
 import sqlite3
@@ -34,13 +34,16 @@ def writeToSQLite(portscan_variable):
     c = conn.cursor()
     # Create SQL query to insert scan results and use question marks for best practices against SQLi.
     query = f'INSERT INTO portscans VALUES (?, ?, ?, ?, ?, ?, ?)'
-    c.execute(query, (
-        f'{portscan_variable["host"]}',
-        f'{portscan_variable["scan_type"]}',
-        f'{portscan_variable["open_ports"]}',
-        f'{portscan_variable["closed_ports"]}',
-        f'{portscan_variable["filtered_ports"]}',
-        f'{portscan_variable["filtered_or_open_ports"]}',
-        f'{portscan_variable["filtered_or_closed_ports"]}'))
+    try:
+        c.execute(query, (
+            f'{portscan_variable["host"]}',
+            f'{portscan_variable["scan_type"]}',
+            f'{portscan_variable["open_ports"]}',
+            f'{portscan_variable["closed_ports"]}',
+            f'{portscan_variable["filtered_ports"]}',
+            f'{portscan_variable["filtered_or_open_ports"]}',
+            f'{portscan_variable["filtered_or_closed_ports"]}'))
+    except sqlite3.OperationalError:
+        print("OperationalError: Attempt to write a readonly database. Please run the script as admin/root.")
     conn.commit()
     conn.close()

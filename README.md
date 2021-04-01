@@ -2,8 +2,13 @@
 This portscanner is created by **0x47root**.
 
 ## Usage:
+Unix based OS:
 ```bash
-python3 main.py
+sudo python3 main.py
+```
+Windows (run as Administrator):
+```cmd
+py main.py
 ```
 
 ## Possible scan types
@@ -18,4 +23,4 @@ python3 main.py
 - Automatically save results to SQLite database
 
 ## Requirements
-- SQLite3 installed
+- WinPcap/NPcap installed (https://www.winpcap.org/install/)
