@@ -16,10 +16,7 @@ portscan = {}
 
 # Define a function for creating a banner for the CLI.
 def create_banner():
-    print(pyfiglet.figlet_format("PORT SCANNER"))
-    print(70 * "-")
-    print("By 0x47root")
-    print(70 * "-")
+    return pyfiglet.figlet_format("PORT SCANNER") + (70 * "-") + "\n" + "By 0x47root\n" + (70 * "-")
 
 # Define a function to ask the user which scan type to conduct while taking care of input sanitization.
 def ask_scantype():
@@ -96,7 +93,7 @@ def writeToJSON():
 # Executing all functions in main to keep an organized code.
 def main():
     # Creating the banner.
-    create_banner()
+    print(create_banner())
 
     # Asking for user input.
     scan_type = ask_scantype()
