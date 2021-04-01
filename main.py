@@ -12,7 +12,7 @@ import XML
 import portscans
 
 # Creating the necessary variables.
-portscan = {}
+# portscan = {}
 
 # Define a function for creating a banner for the CLI.
 def create_banner():
@@ -77,6 +77,7 @@ def ask_output():
 
 # Define a function for creating a dictionary to store scan results.
 def create_dict(target, scan_type):
+    portscan = {}
     portscan['host'] = target
     portscan['scan_type'] = scan_type
     portscan['open_ports'] = []
@@ -84,9 +85,10 @@ def create_dict(target, scan_type):
     portscan['filtered_ports'] = []
     portscan['filtered_or_open_ports'] = []
     portscan['filtered_or_closed_ports'] = []
+    return portscan
 
 # Define a function to write the scan results to a JSON file.
-def writeToJSON():
+def writeToJSON(portscan):
     with open("portscan.json", "w") as outfile:
         json.dump(portscan, outfile)
 
@@ -103,7 +105,7 @@ def main():
     save_output = ask_output()
 
     # Creating the dictionary to store scan results.
-    create_dict(target, scan_type)
+    portscan = create_dict(target, scan_type)
 
     # Check which scan to conduct and execute scan.
     if scan_type == "-sT":
@@ -120,7 +122,7 @@ def main():
         if save_output in ['xml', 'XML']:
             XML.writeToXML(portscan)
         elif save_output in ['json', 'JSON']:
-            writeToJSON()
+            writeToJSON(portscan)
 
     # Writing the scan results to a SQLite database file:
     SQL.writeToSQLite(portscan)
