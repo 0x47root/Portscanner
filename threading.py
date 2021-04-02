@@ -2,6 +2,8 @@ import socket
 import threading
 from queue import Queue
 
+# TIP: check ThreadPoolExecutor library!
+
 print_lock = threading.Lock()
 target = '192.168.178.237'
 
