@@ -1,7 +1,7 @@
 """
 This code is written by 0x47root and conducts a portscan.
 This is the main file. Separate other files are imported for the code to work.
-For more information about the functionality of the code, see README.md.
+For more information about the functionality of the code, see README2.md.
 """
 import ipaddress
 import pyfiglet
