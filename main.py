@@ -1,32 +1,30 @@
 """
 This code is written by 0x47root and conducts a portscan.
 This is the main file. Separate other files are imported for the code to work.
-For more information about the functionality of the code, see README.md
+For more information about the functionality of the code, see README.md.
 """
 import ipaddress
 import pyfiglet
 import json
-# Import other self-written files.
+# Importing self-written files:
+import portscans
 import SQL
 import XML
-import portscans
 
-# Creating the necessary variables.
-# portscan = {}
-
-# Define a function for creating a banner for the CLI.
+# Defining functions:
 def create_banner():
+    """This function prints a banner for the CLI."""
     return pyfiglet.figlet_format("PORT SCANNER") + (70 * "-") + "\n" + "By 0x47root\n" + (70 * "-")
 
-# Define a function to ask the user which scan type to conduct while taking care of input sanitization.
 def ask_scantype():
+    """This function asks the user which scan type to conduct and returns the scan type."""
     scan_type = input("Please enter scan type (-sT, -sU, -sS or -sX): ")
     while scan_type not in ['-sT', '-sU', '-sS', '-sX']:
         scan_type = input("Wrong input, please enter one of the given options (-sT, -sU, -sS or -sX): ")
     return scan_type
 
-# Define a function to ask the user which IPv4 address to scan while taking care of input sanitization.
 def ask_host():
+    """This function asks the user which IPv4 address to scan and returns the target IPv4 address."""
     target = input("Please specify the IP-address to scan: ")
     while True:
         try:
@@ -36,8 +34,8 @@ def ask_host():
             target = input("AddressValueError: Please specify a correct IPv4 address: ")
     return target
 
-# Define a function to ask the user the first port to scan in range while taking care of input sanitization.
 def ask_first_port():
+    """This function asks the user the first port to scan in port range and returns the port."""
     while True:
         try:
             first_port = int(input("Please specify the first port in port range: "))
@@ -48,8 +46,8 @@ def ask_first_port():
             print("ValueError: It has to be an integer.")
     return first_port
 
-# Define a function to ask the user the last port to scan in range while taking care of input sanitization.
 def ask_last_port(first_port):
+    """This function asks the user the last port to scan in port range and returns the port."""
     while True:
         try:
             last_port = int(input("Please specify the last port in port range: ")) + 1
@@ -62,8 +60,8 @@ def ask_last_port(first_port):
             print("ValueError: It has to be an integer.")
     return last_port
 
-# Define a function to ask the user how to output the results while taking care of input sanitization.
 def ask_output():
+    """This function asks the user how to output the results and returns the answer."""
     output = input("Do you want to save the output to a file? (y/n): ")
     while output not in ['y', 'n']:
         output = input("Please enter a 'y' or a 'n': ")
@@ -75,8 +73,8 @@ def ask_output():
         save_output = False
     return save_output
 
-# Define a function for creating a dictionary to store scan results.
 def create_dict(target, scan_type):
+    """This function creates a dictionary to store the scan results."""
     portscan = {}
     portscan['host'] = target
     portscan['scan_type'] = scan_type
@@ -87,27 +85,27 @@ def create_dict(target, scan_type):
     portscan['filtered_or_closed_ports'] = []
     return portscan
 
-# Define a function to write the scan results to a JSON file.
 def writeToJSON(portscan):
+    """This function writes the scan results to a JSON file."""
     with open("portscan.json", "w") as outfile:
         json.dump(portscan, outfile)
 
-# Executing all functions in main to keep an organized code.
+# Defining a main function to keep an organized code:
 def main():
-    # Creating the banner.
+    # Creating the banner:
     print(create_banner())
 
-    # Asking for user input.
+    # Asking for user input:
     scan_type = ask_scantype()
     target = ask_host()
     first_port = ask_first_port()
     last_port = ask_last_port(first_port)
     save_output = ask_output()
 
-    # Creating the dictionary to store scan results.
+    # Creating the dictionary to store scan results:
     portscan = create_dict(target, scan_type)
 
-    # Check which scan to conduct and execute scan.
+    # Check which scan to conduct and execute scan:
     if scan_type == "-sT":
         portscans.TCP_connect_scan(target, first_port, last_port, portscan)
     elif scan_type == "-sU":
@@ -117,7 +115,7 @@ def main():
     elif scan_type == "-sX":
         portscans.XMAS_scan(target, first_port, last_port, portscan)
 
-    # Writing the scan results to a XML or JSON file, if specified.
+    # Writing the scan results to a XML or JSON file, if specified:
     if save_output:
         if save_output in ['xml', 'XML']:
             XML.writeToXML(portscan)
@@ -127,5 +125,6 @@ def main():
     # Writing the scan results to a SQLite database file:
     SQL.writeToSQLite(portscan)
 
+# Executing the main function:
 if __name__ == '__main__':
     main()

@@ -1,22 +1,22 @@
 """
 This file creates a SQLite database file (if not created yet)
-and writes the scan results to the database,
+and writes the scan results to the database.
 """
 import sqlite3
 import os.path
 
-# Define a function to write to the SQlite databse.
 def writeToSQLite(portscan_variable):
+    """This function writes the scan results to a SQlite databse file."""
 
-    # Check if the database file already exists. If not; create database and insert table:
+    # Check if the database file already exists. If not; create database file and insert table:
     if os.path.isfile('portscan.db'):
         pass
     else:
-        # Create the datbase file and connect.
+        # Create the database file and connect:
         conn = sqlite3.connect("portscan.db")
-        # Create the cursor object.
+        # Create a cursor object:
         c = conn.cursor()
-        # Execute SQL query.
+        # Execute the SQL query:
         c.execute('''CREATE TABLE portscans (
             host CHAR, 
             scan_type CHAR, 
@@ -25,14 +25,14 @@ def writeToSQLite(portscan_variable):
             filtered_ports ENUM, 
             filtered_or_open_ports ENUM, 
             filtered_or_closed_ports ENUM)''')
-        # Commit changes and close connection.
+        # Commit changes and close the connection:
         conn.commit()
         conn.close()
 
-    # Connect to the database to write the scan results.
+    # Connect to the database to write the scan results.:
     conn = sqlite3.connect("portscan.db")
     c = conn.cursor()
-    # Create SQL query to insert scan results and use question marks for best practices against SQLi.
+    # Create a SQL query to insert the scan results and use question marks for best practices against SQLi:
     query = f'INSERT INTO portscans VALUES (?, ?, ?, ?, ?, ?, ?)'
     try:
         c.execute(query, (

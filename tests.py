@@ -1,8 +1,11 @@
+"""
+This file contains the unittests for the 'Portscanner' project.
+See 'Unittest Report.pdf' for the results of these tests.
+"""
 import unittest
 import os.path
 import os
-
-# Import from own files.
+# Importing own files:
 from main import *
 from portscans import *
 from SQL import *
@@ -29,7 +32,7 @@ class MainTests(unittest.TestCase):
     def test_ask_last_port(self):
         """
         The function should ask the user for input and output an integer between 1 and 65535.
-        Also the integer has to be higher than or equal to the first port.
+        Also, the integer has to be higher than or equal to the first port.
         """
         self.assertIn(ask_last_port(first_port=1), range(1, 65536))
 
@@ -41,16 +44,14 @@ class MainTests(unittest.TestCase):
         self.assertIn(ask_output(), ['JSON', 'XML', 'json', 'xml', False])
 
     def test_create_dict(self):
-        """
-        The function should create a dictionary to store the scan results in.
-        """
+        """The function should create a dictionary to store the scan results."""
         self.assertIsInstance(create_dict(target='45.33.32.156', scan_type='-sS'), dict)
 
     def test_TCP_connect_scan(self):
         """
-        The function should conduct a TCP-Connect scan to a specific IP address and write the results to
+        The function should conduct a TCP-connect scan to a specific IP-address and write the results to
         the dictionary with the name 'portscan'. While testing, the port range 20-25 is used on 'scanme.nmap.org'.
-        Port 22 should be open and the other ports should be filtered or closed.
+        Port 22 (SSH) should be open and the other ports should be filtered or closed.
         """
         portscan = create_dict(target='45.33.32.156', scan_type='-sT')
         TCP_connect_scan(target='45.33.32.156', first_port=20, last_port=26, portscan_variable=portscan)
@@ -59,9 +60,9 @@ class MainTests(unittest.TestCase):
 
     def test_UDP_scan(self):
         """
-        The function should conduct a UDP scan to a specific IP address and write the results to
-        the dictionary with the name 'portscan'. While testing, the port range 50-55 is used on my own router.
-        Port 53 should be open or filtered and the other ports should be closed.
+        The function should conduct a UDP scan to a specific IP-address and write the results to
+        the dictionary with the name 'portscan'. While testing, the port range 50-55 is used on my own default gateway.
+        Port 53 (DNS) should be open (or filtered) and the other ports should be closed.
         """
         portscan = create_dict(target='192.168.178.1', scan_type='-sU')
         UDP_scan(target='192.168.178.1', first_port=50, last_port=56, portscan_variable=portscan)
@@ -70,9 +71,9 @@ class MainTests(unittest.TestCase):
 
     def test_TCP_SYN_scan(self):
         """
-        The function should conduct a TCP SYN scan to a specific IP address and write the results to
+        The function should conduct a TCP-SYN scan to a specific IP-address and write the results to
         the dictionary with the name 'portscan'. While testing, the port range 20-25 is used on 'scanme.nmap.org'.
-        Port 21 should be open and the other ports should be closed.
+        Port 22 (SSH) should be open and the other ports should be closed.
         """
         portscan = create_dict(target='45.33.32.156', scan_type='-sS')
         TCP_SYN_scan(target='45.33.32.156', first_port=20, last_port=26, portscan_variable=portscan)
@@ -81,7 +82,7 @@ class MainTests(unittest.TestCase):
 
     def test_XMAS_scan(self):
         """
-        The function should conduct a TCP XMAS scan to a specific IP address and write the results to
+        The function should conduct a TCP-XMAS scan to a specific IP-address and write the results to
         the dictionary with the name 'portscan'. While testing, the port range 20-25 is used on 'scanme.nmap.org'.
         It should return all ports are open or filtered.
         """
@@ -90,7 +91,7 @@ class MainTests(unittest.TestCase):
         self.assertEqual(portscan["filtered_or_open_ports"], [20, 21, 22, 23, 24, 25])
 
     def test_writeToXML(self):
-        """The function should write the port scan results to a XML file."""
+        """The function should write the portscan results to a XML file."""
         portscan_variable = {"host": "45.33.32.156",
                              "scan_type": "-sS",
                              "open_ports": [22],
@@ -122,5 +123,6 @@ class MainTests(unittest.TestCase):
             if os.path.isfile(file):
                 os.remove(file)
 
+# Executing all tests:
 if __name__ == "__main__":
     unittest.main()
