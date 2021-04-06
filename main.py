@@ -7,6 +7,7 @@ import concurrent.futures
 import ipaddress
 import pyfiglet
 import json
+import sys
 # Importing self-written files:
 import portscans
 import SQL
@@ -16,6 +17,24 @@ import XML
 def create_banner():
     """This function prints a banner for the CLI."""
     return pyfiglet.figlet_format("PORT SCANNER") + (70 * "-") + "\n" + "By 0x47root\n" + (70 * "-")
+
+def ask_mode():
+    print("What do you want to do?\n1. Execute portscan.\n2. Read previous scan results from database.")
+    mode = input("Please choose: ")
+    while mode not in ['1', '2']:
+        mode = input("Wrong input, please enter '1' or '2': ")
+    return mode
+
+def ask_ip_address():
+    """This function asks the user from which IPv4 address the scan results need to be returned."""
+    ip_address = input("Please specify the IP-address to return the previous scan results: ")
+    while True:
+        try:
+            ipaddress.IPv4Address(ip_address)
+            break
+        except ipaddress.AddressValueError:
+            ip_address = input("AddressValueError: Please specify a correct IPv4 address: ")
+    return ip_address
 
 def ask_scantype():
     """This function asks the user which scan type to conduct and returns the scan type."""
@@ -110,6 +129,13 @@ def sort_dict(dict):
 def main():
     # Creating the banner:
     print(create_banner())
+
+    # Asking user input to start portscan or read from database:
+    mode = ask_mode()
+    if mode == '2':
+        ip_address = ask_ip_address()
+        SQL.show_results(ip_address)
+        sys.exit()
 
     # Asking for user input:
     scan_type = ask_scantype()

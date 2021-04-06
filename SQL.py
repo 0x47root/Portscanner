@@ -47,3 +47,23 @@ def writeToSQLite(portscan_variable):
         print("OperationalError: Attempt to write a readonly database. Please run the script as admin/root.")
     conn.commit()
     conn.close()
+
+def show_results(ip_address):
+    conn = sqlite3.connect("portscan.db")
+    c = conn.cursor()
+    query = "SELECT * FROM portscans WHERE host=?"
+    scan_results = c.execute(query, (ip_address,))
+    for scan in scan_results:
+        print(70 * "-")
+        print(f"Scantype: {scan[1]}")
+        if len(scan[2]) > 2:
+            print(f"Open ports: {scan[2]}")
+        if len(scan[3]) > 2:
+            print(f"Closed ports: {scan[3]}")
+        if len(scan[4]) > 2:
+            print(f"Filtered ports: {scan[4]}")
+        if len(scan[5]) > 2:
+            print(f"Filtered or open ports: {scan[5]}")
+        if len(scan[6]) > 2:
+            print(f"Filtered or closed ports: {scan[6]}")
+    conn.close()
