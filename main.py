@@ -100,6 +100,12 @@ def threader(function, target, first_port, last_port, portscan):
         for port in range(first_port, last_port):
             executor.submit(function, target, port, port+1, portscan)
 
+def sort_dict(dict):
+    """This function sorts all lists in a dictionary."""
+    for key in dict:
+        if type(dict[f"{key}"]) is list:
+            dict[f"{key}"].sort()
+
 # Defining a main function to keep an organized code:
 def main():
     # Creating the banner:
@@ -119,12 +125,16 @@ def main():
     if scan_type == "-sT":
         threader(portscans.TCP_connect_scan, target, first_port, last_port, portscan)
     elif scan_type == "-sU":
-        # Executing UDP scan without threading, because this creates false positives:
+        # Executing UDP scan without threading, because this creates false positives,
+        # possibly because packets are sent faster then the router can respond with an ICMP type 3 code 3 packet:
         portscans.UDP_scan(target, first_port, last_port, portscan)
     elif scan_type == "-sS":
         threader(portscans.TCP_SYN_scan, target, first_port, last_port, portscan)
     elif scan_type == "-sX":
         threader(portscans.XMAS_scan, target, first_port, last_port, portscan)
+
+    # Sorting lists with stored scan results in the dictionary:
+    sort_dict(portscan)
 
     # Writing the scan results to a XML or JSON file, if specified:
     if save_output:
