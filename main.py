@@ -3,6 +3,7 @@ This code is written by 0x47root and conducts a portscan.
 This is the main file. Separate other files are imported for the code to work.
 For more information about the functionality of the code, see README2.md.
 """
+import concurrent.futures
 import ipaddress
 import pyfiglet
 import json
@@ -90,6 +91,15 @@ def writeToJSON(portscan):
     with open("portscan.json", "w") as outfile:
         json.dump(portscan, outfile)
 
+def threader(function, target, first_port, last_port, portscan):
+    """
+    This function uses the ThreadPoolExecutor library to speed up the portscans.
+    Each port generates its own executor.
+    """
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        for port in range(first_port, last_port):
+            executor.submit(function, target, port, port+1, portscan)
+
 # Defining a main function to keep an organized code:
 def main():
     # Creating the banner:
@@ -107,13 +117,14 @@ def main():
 
     # Check which scan to conduct and execute scan:
     if scan_type == "-sT":
-        portscans.TCP_connect_scan(target, first_port, last_port, portscan)
+        threader(portscans.TCP_connect_scan, target, first_port, last_port, portscan)
     elif scan_type == "-sU":
+        # Executing UDP scan without threading, because this creates false positives:
         portscans.UDP_scan(target, first_port, last_port, portscan)
     elif scan_type == "-sS":
-        portscans.TCP_SYN_scan(target, first_port, last_port, portscan)
+        threader(portscans.TCP_SYN_scan, target, first_port, last_port, portscan)
     elif scan_type == "-sX":
-        portscans.XMAS_scan(target, first_port, last_port, portscan)
+        threader(portscans.XMAS_scan, target, first_port, last_port, portscan)
 
     # Writing the scan results to a XML or JSON file, if specified:
     if save_output:
