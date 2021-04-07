@@ -6,6 +6,7 @@ Unix based OS:
 ```bash
 sudo python3 main.py
 ```
+
 Windows OS (run as Administrator):
 ```cmd
 py main.py
