@@ -17,7 +17,7 @@ def TCP_connect_scan(target, first_port, last_port, portscan_variable):
         try:
             # Connecting to the socket:
             s.connect((target, port))
-            print(f"Port {port} is open!")
+            print(f"Port {port} is open")
             # Writing the results to the dictionary:
             portscan_variable['open_ports'].append(port)
         except ConnectionRefusedError:
@@ -57,7 +57,7 @@ def UDP_scan(target, first_port, last_port, portscan_variable):
                     portscan_variable['filtered_ports'].append(port)
             # If the response contains an UDP layer, it runs a daemon and it is open:
             elif res.haslayer(UDP):
-                print(f"Port {port} is open!")
+                print(f"Port {port} is open")
                 portscan_variable['open_ports'].append(port)
 
 def TCP_SYN_scan(target, first_port, last_port, portscan_variable):
@@ -80,7 +80,7 @@ def TCP_SYN_scan(target, first_port, last_port, portscan_variable):
             if res.getlayer(TCP).flags == 0x12: # 0x12 = 18 = 16 + 2 = ACK + SYN
                 # Sending a packet with the 'Reset' flag to close the connection:
                 rst = sr(IP(dst=target)/TCP(dport=port,flags="R"), timeout = 1, verbose=0)
-                print(f"Port {port} is open!")
+                print(f"Port {port} is open")
                 portscan_variable['open_ports'].append(port)
             elif res.getlayer(TCP).flags == 0x14: # 0x12 = 20 = 16 + 4 = ACK + RST
                 print(f"Port {port} is closed")

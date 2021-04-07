@@ -6,7 +6,8 @@ Unix based OS:
 ```bash
 sudo python3 main.py
 ```
-Windows (run as Administrator):
+
+Windows OS (run as Administrator):
 ```cmd
 py main.py
 ```
@@ -21,6 +22,8 @@ py main.py
 - Scan range of ports
 - Save scan results to XML or JSON file
 - Automatically save results to SQLite database
+- Threading to speed up the scans
+- Read and present previous scan results from the database
 
 ## Requirements
 - WinPcap/NPcap installed (https://www.winpcap.org/install/)

@@ -1,11 +1,11 @@
-"""
-This file creates a XML object, writes the scanned ports to this object
-and writes the object to a XML file.
-"""
+"""This file contains all XML related functions."""
 import xml.etree.ElementTree as ET
 
 def writeToXML(portscan_variable):
-    """This function writes the scan results to a XML file."""
+    """
+    This function creates a XML object, writes the scanned ports to this object
+    and writes the object to a XML file.
+    """
 
     # Creating the XML object layout:
     root = ET.Element("ScanResults")
@@ -21,7 +21,7 @@ def writeToXML(portscan_variable):
     scan = ET.SubElement(scan_type, "scan")
     scan.text = portscan_variable["scan_type"]
 
-    # Creating a separate function to fill XML object with the scanned ports:
+    # Creating a separate function to fill the XML object with the scanned ports:
     def fillXML(port_list, port_element):
         if port_list:
             for p in port_list:

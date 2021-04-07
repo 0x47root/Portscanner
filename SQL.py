@@ -1,12 +1,13 @@
-"""
-This file creates a SQLite database file (if not created yet)
-and writes the scan results to the database.
-"""
+"""This file contains all SQL related functions."""
 import sqlite3
 import os.path
+import sys
 
 def writeToSQLite(portscan_variable):
-    """This function writes the scan results to a SQlite databse file."""
+    """
+    This function creates a SQLite database file (if not created yet)
+    writes the scan results o the database.
+    """
 
     # Check if the database file already exists. If not; create database file and insert table:
     if os.path.isfile('portscan.db'):
@@ -46,4 +47,29 @@ def writeToSQLite(portscan_variable):
     except sqlite3.OperationalError:
         print("OperationalError: Attempt to write a readonly database. Please run the script as admin/root.")
     conn.commit()
+    conn.close()
+
+def show_results(ip_address):
+    """This function presents the scan results of a specific IP-address to the user."""
+    if not os.path.isfile('portscan.db'):
+        print("Error: 'portscan.db' not found. Did you already run a scan?")
+        sys.exit()
+    conn = sqlite3.connect("portscan.db")
+    c = conn.cursor()
+    query = "SELECT * FROM portscans WHERE host=?"
+    scan_results = c.execute(query, (ip_address,)) # 'ip_address' needs to be in a tuple
+    for scan in scan_results:
+        print(70 * "-")
+        print(f"Scantype: {scan[1]}")
+        # Only printing lists that contain scan results:
+        if len(scan[2]) > 2:
+            print(f"Open ports: {scan[2]}")
+        if len(scan[3]) > 2:
+            print(f"Closed ports: {scan[3]}")
+        if len(scan[4]) > 2:
+            print(f"Filtered ports: {scan[4]}")
+        if len(scan[5]) > 2:
+            print(f"Filtered or open ports: {scan[5]}")
+        if len(scan[6]) > 2:
+            print(f"Filtered or closed ports: {scan[6]}")
     conn.close()
