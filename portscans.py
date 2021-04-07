@@ -17,14 +17,14 @@ def TCP_connect_scan(target, first_port, last_port, portscan_variable):
         try:
             # Connecting to the socket:
             s.connect((target, port))
-            print(f"Port {port} is open!\n")
+            print(f"Port {port} is open")
             # Writing the results to the dictionary:
             portscan_variable['open_ports'].append(port)
         except ConnectionRefusedError:
-            print(f"Port {port} is filtered or closed\n")
+            print(f"Port {port} is filtered or closed")
             portscan_variable['filtered_or_closed_ports'].append(port)
         except TimeoutError:
-            print(f"Port {port} is filtered or closed\n")
+            print(f"Port {port} is filtered or closed")
             portscan_variable['filtered_or_closed_ports'].append(port)
         # Closing the socket connection:
         s.close()
@@ -43,21 +43,21 @@ def UDP_scan(target, first_port, last_port, portscan_variable):
         # Sleep one second to prevent false positives:
         time.sleep(1)
         if res == None:
-            print(f"Port {port} is open or filtered\n")
+            print(f"Port {port} is open or filtered")
             portscan_variable['filtered_or_open_ports'].append(port)
         else:
             if res.haslayer(ICMP):
                 # Checking if the response is ICMP "port unreachable":
                 if int(res.getlayer(ICMP).type) == 3 and int(res.getlayer(ICMP).code) == 3:
-                    print(f"Port {port} is closed\n")
+                    print(f"Port {port} is closed")
                     portscan_variable['closed_ports'].append(port)
                 # Checking if the response contains other ICMP codes as a result of a filtered port:
                 elif int(res.getlayer(ICMP).type) == 3 and int(res.getlayer(ICMP).code) in [1, 2, 9, 10, 13]:
-                    print(f"Port {port} is filtered\n")
+                    print(f"Port {port} is filtered")
                     portscan_variable['filtered_ports'].append(port)
             # If the response contains an UDP layer, it runs a daemon and it is open:
             elif res.haslayer(UDP):
-                print(f"Port {port} is open!\n")
+                print(f"Port {port} is open")
                 portscan_variable['open_ports'].append(port)
 
 def TCP_SYN_scan(target, first_port, last_port, portscan_variable):
@@ -74,20 +74,20 @@ def TCP_SYN_scan(target, first_port, last_port, portscan_variable):
             print("ValueError: Unknown mypcap network interface. Make sure WinPcap is installed correctly.")
             sys.exit()
         if res == None:
-            print(f"Port {port} is filtered\n")
+            print(f"Port {port} is filtered")
             portscan_variable['filtered_ports'].append(port)
         elif res.haslayer(TCP):
             if res.getlayer(TCP).flags == 0x12: # 0x12 = 18 = 16 + 2 = ACK + SYN
                 # Sending a packet with the 'Reset' flag to close the connection:
                 rst = sr(IP(dst=target)/TCP(dport=port,flags="R"), timeout = 1, verbose=0)
-                print(f"Port {port} is open!\n")
+                print(f"Port {port} is open")
                 portscan_variable['open_ports'].append(port)
             elif res.getlayer(TCP).flags == 0x14: # 0x12 = 20 = 16 + 4 = ACK + RST
-                print(f"Port {port} is closed\n")
+                print(f"Port {port} is closed")
                 portscan_variable['closed_ports'].append(port)
             elif res.haslayer(ICMP):
                 if int(res.getlayer(ICMP).type)==3 and int(res.getlayer(ICMP).code) in [1,2,3,9,10,13]:
-                    print(f"Port {port} is filtered\n")
+                    print(f"Port {port} is filtered")
                     portscan_variable['filtered_ports'].append(port)
 
 def XMAS_scan(target, first_port, last_port, portscan_variable):
@@ -102,13 +102,13 @@ def XMAS_scan(target, first_port, last_port, portscan_variable):
             print("ValueError: Unknown mypcap network interface. Make sure WinPcap is installed correctly.")
             sys.exit()
         if res == None:
-            print(f"Port {port} is filtered or open\n")
+            print(f"Port {port} is filtered or open")
             portscan_variable['filtered_or_open_ports'].append(port)
         elif res.haslayer(TCP):
             if res.getlayer(TCP).flags == 0x14: # 0x14 = 20 = 16 + 4 = ACK + RST
-                print(f"Port {port} is closed\n")
+                print(f"Port {port} is closed")
                 portscan_variable['closed_ports'].append(port)
             elif res.haslayer(ICMP):
                 if int(res.getlayer(ICMP).type)==3 and int(res.getlayer(ICMP).code) in [1,2,3,9,10,13]:
-                    print(f"Port {port} is filtered\n")
+                    print(f"Port {port} is filtered")
                     portscan_variable['filtered_ports'].append(port)

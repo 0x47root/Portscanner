@@ -19,6 +19,7 @@ def create_banner():
     return pyfiglet.figlet_format("PORT SCANNER") + (70 * "-") + "\n" + "By 0x47root\n" + (70 * "-")
 
 def ask_mode():
+    """This function asks the user in what mode the programs needs to run."""
     print("What do you want to do?\n1. Execute portscan.\n2. Read previous scan results from database.")
     mode = input("Please choose: ")
     while mode not in ['1', '2']:
@@ -26,8 +27,8 @@ def ask_mode():
     return mode
 
 def ask_ip_address():
-    """This function asks the user from which IPv4 address the scan results need to be returned."""
-    ip_address = input("Please specify the IP-address to return the previous scan results: ")
+    """This function asks the user from which IPv4 address the scan results need to be presented."""
+    ip_address = input("Please specify the IP-address from which to return the results: ")
     while True:
         try:
             ipaddress.IPv4Address(ip_address)
@@ -120,7 +121,7 @@ def threader(function, target, first_port, last_port, portscan):
             executor.submit(function, target, port, port+1, portscan)
 
 def sort_dict(dict):
-    """This function sorts all lists in a dictionary."""
+    """This function sorts all lists in a dictionary. It is used to save and present the scan results more organized."""
     for key in dict:
         if type(dict[f"{key}"]) is list:
             dict[f"{key}"].sort()
@@ -130,14 +131,16 @@ def main():
     # Creating the banner:
     print(create_banner())
 
-    # Asking user input to start portscan or read from database:
+    # Asking the user in which mode the program needs to be run:
     mode = ask_mode()
+
+    # If the program is ran in mode 2, ask the IP-address and present results form SQLite database:
     if mode == '2':
         ip_address = ask_ip_address()
         SQL.show_results(ip_address)
         sys.exit()
 
-    # Asking for user input:
+    # Asking for user input needed to conduct portscan:
     scan_type = ask_scantype()
     target = ask_host()
     first_port = ask_first_port()
@@ -147,7 +150,7 @@ def main():
     # Creating the dictionary to store scan results:
     portscan = create_dict(target, scan_type)
 
-    # Check which scan to conduct and execute scan:
+    # Check which scan to conduct and execute scan (while using threading to speed up the scan):
     if scan_type == "-sT":
         threader(portscans.TCP_connect_scan, target, first_port, last_port, portscan)
     elif scan_type == "-sU":
@@ -159,7 +162,7 @@ def main():
     elif scan_type == "-sX":
         threader(portscans.XMAS_scan, target, first_port, last_port, portscan)
 
-    # Sorting lists with stored scan results in the dictionary:
+    # Sorting the lists within the portscan dictionary:
     sort_dict(portscan)
 
     # Writing the scan results to a XML or JSON file, if specified:
