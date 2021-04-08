@@ -1,6 +1,6 @@
 """
 This file contains all scan types the user can choose to execute.
-The first scan (TCP-connect) uses the 'sockets' library.
+The first scan (TCP-Connect) uses the 'sockets' library.
 All other scans use the 'scapy' library.
 """
 from scapy.all import *
@@ -10,7 +10,7 @@ import sys
 
 # Defining all scan types:
 def TCP_connect_scan(target, first_port, last_port, portscan_variable):
-    """This function conducts a TCP-connect scan."""
+    """This function conducts a TCP-Connect scan."""
     for port in range(first_port, last_port):
         # Creating the socket:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -91,7 +91,7 @@ def TCP_SYN_scan(target, first_port, last_port, portscan_variable):
                     portscan_variable['filtered_ports'].append(port)
 
 def XMAS_scan(target, first_port, last_port, portscan_variable):
-    """This function conducts a XMAS scan."""
+    """This function conducts a TCP-XMAS scan."""
     for port in range(first_port, last_port):
         try:
             res = sr1(IP(dst=target)/TCP(dport=port,flags="FPU"), timeout=1, verbose=0) # FPU = FIN, PSH and URG

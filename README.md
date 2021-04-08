@@ -13,12 +13,12 @@ py main.py
 ```
 
 ## Possible scan types
-- TCP-Connect Scan (-sT)
-- UDP Scan (-sU)
-- SYN Scan (-sS)
-- XMAS Scan (-sX)
+- TCP-Connect Scan
+- UDP Scan
+- TCP-SYN Scan
+- TCP-XMAS Scan
 
-## Additional functionalities
+## Functionalities
 - Scan range of ports
 - Save scan results to XML or JSON file
 - Automatically save results to SQLite database
