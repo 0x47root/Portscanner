@@ -18,8 +18,8 @@ class MainTests(unittest.TestCase):
         self.assertIsNotNone(create_banner())
 
     def test_ask_scantype(self):
-        """The function should ask the user for input and output -sT, -sU, -sS or -sX."""
-        self.assertIn(ask_scantype(), ['-sT', '-sU', '-sS', '-sX'])
+        """The function should ask the user for input and output the scan type."""
+        self.assertIn(ask_scantype(), ['TCP-Connect Scan', 'UDP Scan', 'TCP-SYN Scan', 'TCP-XMAS Scan'])
 
     def test_ask_host(self):
         """The function should ask the user for input and return a string."""
@@ -34,7 +34,7 @@ class MainTests(unittest.TestCase):
         The function should ask the user for input and output an integer between 1 and 65535.
         Also, the integer has to be higher than or equal to the first port.
         """
-        self.assertIn(ask_last_port(first_port=1), range(1, 65536))
+        self.assertIn(ask_last_port(first_port=10), range(1, 65536))
 
     def test_ask_output(self):
         """

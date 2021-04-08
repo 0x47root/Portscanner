@@ -8,7 +8,6 @@ def writeToSQLite(portscan_variable):
     This function creates a SQLite database file (if not created yet)
     writes the scan results o the database.
     """
-
     # Check if the database file already exists. If not; create database file and insert table:
     if os.path.isfile('portscan.db'):
         pass
@@ -30,7 +29,7 @@ def writeToSQLite(portscan_variable):
         conn.commit()
         conn.close()
 
-    # Connect to the database to write the scan results.:
+    # Connect to the database to write the scan results:
     conn = sqlite3.connect("portscan.db")
     c = conn.cursor()
     # Create a SQL query to insert the scan results and use question marks for best practices against SQLi:

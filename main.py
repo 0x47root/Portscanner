@@ -1,7 +1,7 @@
 """
 This code is written by 0x47root and conducts a portscan.
 This is the main file. Separate other files are imported for the code to work.
-For more information about the functionality of the code, see README2.md.
+For more information about the functionality of the code, see README.md.
 """
 import concurrent.futures
 import ipaddress
@@ -16,7 +16,7 @@ import XML
 # Defining functions:
 def create_banner():
     """This function prints a banner for the CLI."""
-    return pyfiglet.figlet_format("PORT SCANNER") + (70 * "-") + "\n" + "By 0x47root\n" + (70 * "-")
+    return pyfiglet.figlet_format("PORT SCANNER") + (70 * "-") + "\nBy 0x47root\n" + (70 * "-")
 
 def ask_mode():
     """This function asks the user in what mode the programs needs to run."""
@@ -39,9 +39,19 @@ def ask_ip_address():
 
 def ask_scantype():
     """This function asks the user which scan type to conduct and returns the scan type."""
-    scan_type = input("Please enter scan type (-sT, -sU, -sS or -sX): ")
-    while scan_type not in ['-sT', '-sU', '-sS', '-sX']:
-        scan_type = input("Wrong input, please enter one of the given options (-sT, -sU, -sS or -sX): ")
+    print(70 * "-" + "\nWhat type of scan do you want to execute?")
+    print("1. TCP-Connect Scan\n2. UDP Scan\n3. TCP-SYN Scan\n4. TCP-XMAS Scan")
+    scan_type = input("Please choose: ")
+    while scan_type not in ['1', '2', '3', '4']:
+        scan_type = input("Wrong input, please enter one of the given numbers (1, 2, 3 or 4): ")
+    if scan_type == '1':
+        scan_type = 'TCP-Connect Scan'
+    elif scan_type == '2':
+        scan_type = 'UDP Scan'
+    elif scan_type == '3':
+        scan_type = 'TCP-SYN Scan'
+    elif scan_type == '4':
+        scan_type = 'TCP-XMAS Scan'
     return scan_type
 
 def ask_host():
@@ -140,7 +150,7 @@ def main():
         SQL.show_results(ip_address)
         sys.exit()
 
-    # Asking for user input needed to conduct portscan:
+    # Asking for user input needed to execute the portscan:
     scan_type = ask_scantype()
     target = ask_host()
     first_port = ask_first_port()
@@ -151,15 +161,19 @@ def main():
     portscan = create_dict(target, scan_type)
 
     # Check which scan to conduct and execute scan (while using threading to speed up the scan):
-    if scan_type == "-sT":
+    if scan_type == "TCP-Connect Scan":
+        print(70 * "-" + "\n*** Starting TCP-Connect Scan ***")
         threader(portscans.TCP_connect_scan, target, first_port, last_port, portscan)
-    elif scan_type == "-sU":
+    elif scan_type == "UDP Scan":
+        print(70 * "-" + "\n*** Starting UDP Scan ***")
         # Executing UDP scan without threading, because this creates false positives,
         # possibly because packets are sent faster then the router can respond with an ICMP type 3 code 3 packet:
         portscans.UDP_scan(target, first_port, last_port, portscan)
-    elif scan_type == "-sS":
+    elif scan_type == "TCP-SYN Scan":
+        print(70 * "-" + "\n*** Starting TCP-SYN Scan ***")
         threader(portscans.TCP_SYN_scan, target, first_port, last_port, portscan)
-    elif scan_type == "-sX":
+    elif scan_type == "TCP-XMAS Scan":
+        print(70 * "-" + "\n*** Starting TCP-XMAS Scan ***")
         threader(portscans.XMAS_scan, target, first_port, last_port, portscan)
 
     # Sorting the lists within the portscan dictionary:
@@ -175,6 +189,9 @@ def main():
     # Writing the scan results to a SQLite database file:
     SQL.writeToSQLite(portscan)
 
-# Executing the main function:
+    # Printing finished line:
+    print("*** Portscan finished ***")
+
+# Executing the main function only when this file is run directly:
 if __name__ == '__main__':
     main()
